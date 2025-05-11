@@ -131,17 +131,24 @@
                 projectId: "whythisagain-c8485",
                 storageBucket: "whythisagain-c8485.firebasestorage.app",
                 messagingSenderId: "779902621474",
-                appId: "1:779902621474:web:46c8a3d39582c0300d777b"
+                appId: "1:779902621474:web:46c8a3d39582c0300d777b",
+                measurementId: "G-FLYY3P4F16"
             };
 
             const app = initializeApp(firebaseConfig);
             const db = getDatabase(app);
-
             const siteActiveRef = ref(db, 'siteActive');
+
+            // Listen to changes on the "siteActive" value
             onValue(siteActiveRef, (snapshot) => {
                 const isActive = snapshot.val();
-                if (!isActive) {
-                document.body.innerHTML = '<h1 style="color: whitesmoke; font-size: 40px;">🚧 This website is currently offline</h1>';
+                console.log('Received siteActive:', isActive);  // Log the value to see it in the console
+
+                if (isActive === false) {
+                    console.log('Site is offline');  // Added log for offline state
+                    document.body.innerHTML = '<h1 style="color: whitesmoke; font-size: 40px;">🚧 This website is currently offline</h1>';
+                } else {
+                    console.error('Unexpected value for siteActive:', isActive);
                 }
             });
         </script>
