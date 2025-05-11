@@ -1,87 +1,88 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Admin Panel</title>
-  <link rel="stylesheet" href="adminStyle.css">
-</head>
-<body>
-  <div id="app">Checking access...</div> 
-  <h1>Admin Panel</h1>
-  <button id="toggleBtn">Loading...</button>
+  <head>
+    <title>Home</title>
+    <link rel="stylesheet" href="adminStyle.css">
+    <link rel="shortcut icon" type="x-icon" href="img/classrom.jpg">
+  </head>
+  <body>
+    <div id="app">Checking access...</div> 
+    <h1>Admin Panel</h1>
+    <button id="toggleBtn">Loading...</button>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+      import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCPgfx4BIbR0Qt97M12dIFUEy1hd87Vj9Q",
-      authDomain: "whythisagain-c8485.firebaseapp.com",
-      databaseURL: "https://whythisagain-c8485-default-rtdb.firebaseio.com",
-      projectId: "whythisagain-c8485",
-      storageBucket: "whythisagain-c8485.appspot.com",
-      messagingSenderId: "779902621474",
-      appId: "1:779902621474:web:46c8a3d39582c0300d777b"
-    };
+      const firebaseConfig = {
+        apiKey: "AIzaSyCPgfx4BIbR0Qt97M12dIFUEy1hd87Vj9Q",
+        authDomain: "whythisagain-c8485.firebaseapp.com",
+        databaseURL: "https://whythisagain-c8485-default-rtdb.firebaseio.com",
+        projectId: "whythisagain-c8485",
+        storageBucket: "whythisagain-c8485.appspot.com",
+        messagingSenderId: "779902621474",
+        appId: "1:779902621474:web:46c8a3d39582c0300d777b"
+      };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-    const statusRef = ref(db, 'siteActive');
-    const adminRef = (uid) => ref(db, 'admins/' + uid);
-    const button = document.getElementById('toggleBtn');
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getDatabase(app);
+      const statusRef = ref(db, 'siteActive');
+      const adminRef = (uid) => ref(db, 'admins/' + uid);
+      const button = document.getElementById('toggleBtn');
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        document.getElementById('app').innerText = "You must be logged in.";
-        window.location.href = "login.html";
-        return;
-      }
-
-      try {
-        const adminSnap = await get(adminRef(user.uid));
-        if (adminSnap.exists() && adminSnap.val() === true) {
-          document.getElementById('app').innerHTML = "<h1>Welcome, Admin!</h1>";
-          loadStatus(); // ✅ FIXED: actually call the function
-        } else {
-          document.getElementById('app').innerText = "Access Denied.";
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          document.getElementById('app').innerText = "You must be logged in.";
+          window.location.href = "login.html";
+          return;
         }
-      } catch (err) {
-        console.error(err);
-        document.getElementById('app').innerText = "Error loading admin panel.";
-      }
-    });
 
-    async function loadStatus() {
-      try {
-        const snapshot = await get(statusRef);
-        if (snapshot.exists()) {
-          const status = snapshot.val();
-          updateButton(status);
-        } else {
-          updateButton(false); // Default to false if no status exists
+        try {
+          const adminSnap = await get(adminRef(user.uid));
+          if (adminSnap.exists() && adminSnap.val() === true) {
+            document.getElementById('app').innerHTML = "<h1>Welcome, Admin!</h1>";
+            loadStatus(); // ✅ FIXED: actually call the function
+          } else {
+            document.getElementById('app').innerText = "Access Denied.";
+          }
+        } catch (err) {
+          console.error(err);
+          document.getElementById('app').innerText = "Error loading admin panel.";
         }
-      } catch (err) {
-        console.error("Failed to load status:", err);
-        button.innerText = "Error";
-      }
-    }
+      });
 
-    function updateButton(isActive) {
-      button.innerText = isActive ? "Stop Site" : "Start Site";
-      button.onclick = () => toggleStatus(!isActive); // Pass the opposite status when clicked
-    }
-
-    async function toggleStatus(newStatus) {
-      console.log('Toggling site status to:', newStatus);
-      try {
-        await set(statusRef, newStatus); // Update the site status in Firebase
-        updateButton(newStatus); // Update button text
-      } catch (err) {
-        console.error("Failed to update status:", err);
-        button.innerText = "Update failed";
+      async function loadStatus() {
+        try {
+          const snapshot = await get(statusRef);
+          if (snapshot.exists()) {
+            const status = snapshot.val();
+            updateButton(status);
+          } else {
+            updateButton(false); // Default to false if no status exists
+          }
+        } catch (err) {
+          console.error("Failed to load status:", err);
+          button.innerText = "Error";
+        }
       }
-    }
-  </script>
-</body>
+
+      function updateButton(isActive) {
+        button.innerText = isActive ? "🟢Stop Site" : "🔴Start Site";
+        button.onclick = () => toggleStatus(!isActive); // Pass the opposite status when clicked
+      }
+
+      async function toggleStatus(newStatus) {
+        console.log('Toggling site status to:', newStatus);
+        try {
+          await set(statusRef, newStatus); // Update the site status in Firebase
+          updateButton(newStatus); // Update button text
+        } catch (err) {
+          console.error("Failed to update status:", err);
+          button.innerText = "Update failed";
+        }
+      }
+    </script>
+  </body>
 </html>

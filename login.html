@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Home</title>
     <link rel="stylesheet" href="adminStyle.css">
+    <link rel="shortcut icon" type="x-icon" href="img/classrom.jpg">
 
     <!-- Firebase v10.11.0 UMD CDN Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
-    </head>
-<body>
-    <h2>Admin Login</h2>
-    <input id="email" />
-    <input id="password" type="password" />
-    <button onclick="login()">Login</button>
+  </head>
+  <body>
+    <h2 class="header-name">Admin Login</h2>
+    <input class="login" id="email" />
+    <input class="login" id="password" type="password"/>
+    <button class="login" onclick="login()">Login</button>
 
     <p id="status"></p>
 
@@ -59,5 +60,5 @@
           .catch(err => alert(err.message));
       }
     </script>
-</body>
+  </body>
 </html>
