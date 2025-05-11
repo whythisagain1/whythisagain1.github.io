@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="adminStyle.css">
+</head>
+<body>
+    
+  <h1>Admin Panel</h1>
+  <button id="toggleBtn">Loading...</button>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCPgfx4BIbR0Qt97M12dIFUEy1hd87Vj9Q",
+        authDomain: "whythisagain-c8485.firebaseapp.com",
+        databaseURL: "https://whythisagain-c8485-default-rtdb.firebaseio.com",
+        projectId: "whythisagain-c8485",
+        storageBucket: "whythisagain-c8485.firebasestorage.app",
+        messagingSenderId: "779902621474",
+        appId: "1:779902621474:web:46c8a3d39582c0300d777b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const siteRef = ref(db, 'siteActive');
+    const button = document.getElementById('toggleBtn');
+
+    async function loadStatus() {
+      const snapshot = await get(siteRef);
+      const isActive = snapshot.val();
+      updateButton(isActive);
+    }
+
+    function updateButton(status) {
+      button.textContent = status ? "🔴 Stop Site" : "🟢 Start Site";
+      button.onclick = () => {
+        set(siteRef, !status);
+        updateButton(!status);
+      };
+    }
+
+    loadStatus();
+  </script>
+</body>
+</html>
