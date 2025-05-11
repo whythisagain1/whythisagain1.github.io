@@ -23,5 +23,31 @@
                <iframe class="lessons-iframe" id="lesson-area" src="https://a-class.space/_games/paper-minecraft" width="720" height="1080" scrolling="none" frameborder="0" allowfullscreen=""></iframe>
             </div>
         </main>
+
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+            import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyCPgfx4BIbR0Qt97M12dIFUEy1hd87Vj9Q",
+                authDomain: "whythisagain-c8485.firebaseapp.com",
+                databaseURL: "https://whythisagain-c8485-default-rtdb.firebaseio.com",
+                projectId: "whythisagain-c8485",
+                storageBucket: "whythisagain-c8485.firebasestorage.app",
+                messagingSenderId: "779902621474",
+                appId: "1:779902621474:web:46c8a3d39582c0300d777b"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const db = getDatabase(app);
+
+            const siteActiveRef = ref(db, 'siteActive');
+            onValue(siteActiveRef, (snapshot) => {
+                const isActive = snapshot.val();
+                if (!isActive) {
+                document.body.innerHTML = '<h1 style="color: whitesmoke; font-size: 40px;">🚧 This website is currently offline</h1>';
+                }
+            });
+        </script>
     </body>
 </html>
