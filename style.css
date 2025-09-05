@@ -95,6 +95,13 @@ header nav ul li a {
     width: 1707px;
 }
 
+.updateText {
+    margin: 25px;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 20px;
+}
+
 /*Games page*/
 .game {
     background-color: rgba(0, 0, 0, 0);
